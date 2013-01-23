@@ -1,27 +1,37 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
+int countLines(char* buf)
+{  
 
 int main(int argc, char** argv)
-{   FILE *fp = NULL;
+{   FILE* fp = NULL;
     char* buf = NULL;
     char* bufp;
     size_t bufsz, cursz, curpos;
     ssize_t ssz;
     struct stat st;
+    int fd,numOfLines = 0;
 
-    *fp = popen(ls, 'r');
 
-    /if(fstat(*fp, &st) >= 0)
-    	bufsz = (size_t) st.st_blksize;
-    else
+    fp = popen("ls *", "r");
+    fd= fileno(fp);
+
+    if(fstat(fd, &st) >= 0) {
+        bufsz = (size_t) st.st_blksize;
+    } else {
 	printf("error 1");
+    }
 
     //	Allocate buffer of size BUFSZ.
     buf = (char *) malloc (bufsz);
-    curpos =0;
+    curpos = 0;
     cursz = bufsz;
 
     //	Block read FD, storing data into BUF.
-    while((ssz=read(*fp, buf + curpos, bufsz)) > 0)
+    while((ssz=read(fd, buf + curpos, bufsz)) > 0)
     {	curpos+=ssz;
 	cursz=curpos+bufsz;
 	if(NULL == (bufp = (char *) realloc (buf, cursz)))
@@ -31,4 +41,15 @@ int main(int argc, char** argv)
 
     // Zero-terminate BUF.
     buf[curpos] = 0;
+    pclose(fp);
+
+    numOfLines = countLines(*buf);
+    if(numbOfLines > 25)
+    {	printf("too many lines");
+    ]
+    else
+    {	printf(buf);
+    }
+
+    return 0;
 }
