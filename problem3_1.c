@@ -5,22 +5,22 @@ int main(int argc, char** argv)
     char* buf = NULL;
     char* bufp;
     size_t bufsz, cursz, curpos;
-    ssize-t ssz;
+    ssize_t ssz;
     struct stat st;
 
     *fp = popen(ls, 'r');
 
-    if(fstat(*fp, &st) >= 0)
+    /if(fstat(*fp, &st) >= 0)
     	bufsz = (size_t) st.st_blksize;
     else
 	printf("error 1");
 
-    /*	Allocate buffer of size BUFSZ.	*/
+    //	Allocate buffer of size BUFSZ.
     buf = (char *) malloc (bufsz);
     curpos =0;
     cursz = bufsz;
 
-    /*	Block read FD, storing data into BUF.	*/
+    //	Block read FD, storing data into BUF.
     while((ssz=read(*fp, buf + curpos, bufsz)) > 0)
     {	curpos+=ssz;
 	cursz=curpos+bufsz;
@@ -29,5 +29,6 @@ int main(int argc, char** argv)
 	buf = bufp;
     }
 
-    /* Zero-terminate BUF. */
+    // Zero-terminate BUF.
     buf[curpos] = 0;
+}
