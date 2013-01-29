@@ -5,7 +5,7 @@
 
 // counts newline characters until zero terminator is found (end of string)
 int countLines(char* buf)
-{ int i,counter=0;
+{ int i=0,counter=0;
   char a;
   while((a=buf[i]) != '\0')
   { if(a=='\n')
