@@ -1,5 +1,0 @@
-Problem 1
-1. They child process becomes an orphan and is adopted by the init process.
-2. The zombie process cannot kill its parent because it has finished executing.
-3. Yes it can become a zombie so the exiting information is available to the daemons parent process.
-4.By deafult in linux systems an orphan process is immediatly adopted by the init process.

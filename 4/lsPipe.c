@@ -17,22 +17,22 @@ int countLines(char* buf)
 }
 
 int main(int argc, char** argv)
-{ FILE* fp = NULL;
-  char* buf = NULL;
-  char* bufp;
-  size_t bufsz, cursz, curpos;
-  ssize_t ssz;
-  struct stat st;
-  int fd,numOfLines = 0;
+{ FILE* fp = NULL;  //file pointer
+  char* buf = NULL;  //buffer string
+  char* bufp;  //buffer pointer
+  size_t bufsz, cursz, curpos;  //buffer size, current total size of the buffer, current position in the buffer
+  ssize_t ssz; //string size in the file
+  struct stat st;  //structure for file properties, used by fstat
+  int fd,numOfLines = 0;  //filedescriptor for fp conversion, line counter
 
-  fp = popen("ls", "r");
-  fd= fileno(fp);
+  fp = popen("ls", "r"); //open pipe of ls command with read rights
+  fd = fileno(fp); //convert FILE *fp into int fd
 
   //uses fstat to determine size of the buffer from file descriptor provided
-  if(fstat(fd, &st) >= 0) {
-    bufsz = (size_t) st.st_blksize;
-  } else {
-    printf("error 1");
+  if(fstat(fd, &st) >= 0)
+  { bufsz = (size_t) st.st_blksize;
+  } else
+  { printf("error 1\n");
     exit(0);
   }
 
@@ -42,12 +42,12 @@ int main(int argc, char** argv)
   cursz = bufsz;
 
   // Block read FD, storing data into BUF.
-  while((ssz=read(fd, buf + curpos, bufsz)) > 0)
+  while((ssz=read(fd, buf + curpos, bufsz)) > 0) //read returns int>0, if successful
   { curpos+=ssz;
     cursz=curpos+bufsz;
     //if not enough memory for increasing the buffer, exit
     if(NULL == (bufp = (char *) realloc (buf, cursz)))
-    { printf("error 2");
+    { printf("error 2\n");
       exit(0);
     }
     buf = bufp;
@@ -59,17 +59,9 @@ int main(int argc, char** argv)
 
   //count the number of lines in buf, which is the output of "ls"
   numOfLines = countLines(buf);
-  if(numOfLines > 25)
-  { //printf("too many lines");
-    //open writable pipe to less editor and point fp to it
-    fp = popen("less", "w");
-    //print the whole of buf into less through the pointer
-    fprintf(fp, "%s",buf);
-    //close the pipe for less to be flushed into stdout
-    pclose(fp);  
-  } else  // 25 line or less
-  { printf(buf);
-  }
+  if(numOfLines > 25)  printf("too many lines\n");
+  // 25 line or less  
+  else  printf("%s",buf);
 
   return 0;
 }
