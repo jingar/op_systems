@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <string.h>
 
 // counts newline characters until zero terminator is found (end of string)
 int countLines(char* buf)
@@ -25,7 +26,15 @@ int main(int argc, char** argv)
   struct stat st;  //structure for file properties, used by fstat
   int fd,numOfLines = 0;  //filedescriptor for fp conversion, line counter
 
-  fp = popen("ls", "r"); //open pipe of ls command with read rights
+  char* commandArgs = (char *) malloc (sizeof(char)*50); //allocates memeory for 50 characters for the command and args
+  int i = 1;
+  commandArgs = strcat(commandArgs, "ls ");
+  while(i<argc)  //concats arguements with spaces after "ls"
+  { commandArgs = strcat(commandArgs, argv[i]);
+    commandArgs = strcat(commandArgs,  " ");
+    i++;
+  }
+  fp = popen(commandArgs, "r"); //open pipe of ls command with read rights
   fd = fileno(fp); //convert FILE *fp into int fd
 
   //uses fstat to determine size of the buffer from file descriptor provided
