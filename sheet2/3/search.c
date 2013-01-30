@@ -3,7 +3,7 @@
 #include <string.h>
 
 
-/* A function to search a substing in a file.  The file F has to be
+/* A function to searcg a substing in a file.  The file F has to be
    opened and the function is going to call subsequent fgetc on F
    until it reaches EOF or finds the match.
 
@@ -48,16 +48,12 @@ int search (FILE *f, const char *pat)
 
    XXX: Use a better searching algorihm.  */
 int main (int argc, char *argv[])
-{ if(argc < 3)
-  { puts("Please provide at least 2 arguements: string to search for and a file where to search in.\n");
-    exit(EXIT_SUCCESS);
-  }
-
-  if (-1 == search (fopen (argv[1], "r"), "test"))
-  { printf ("pattern 'test' was not found in %s\n", argv[1]);
-    return EXIT_FAILURE;
-  } else
-  { printf ("pattern 'test' found in %s\n", argv[1]);
-    return EXIT_SUCCESS;
-  }
+{
+    if (-1 == search (fopen (argv[1], "r"), "test")) {
+        printf ("pattern 'test' was not found in %s\n", argv[1]);
+        return EXIT_FAILURE;
+    } else {
+        printf ("pattern 'test' found in %s\n", argv[1]);
+        return EXIT_SUCCESS;
+    }
 }
