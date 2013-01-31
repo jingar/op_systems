@@ -48,12 +48,24 @@ int search (FILE *f, const char *pat)
 
    XXX: Use a better searching algorihm.  */
 int main (int argc, char *argv[])
-{
-    if (-1 == search (fopen (argv[1], "r"), "test")) {
-        printf ("pattern 'test' was not found in %s\n", argv[1]);
-        return EXIT_FAILURE;
-    } else {
-        printf ("pattern 'test' found in %s\n", argv[1]);
-        return EXIT_SUCCESS;
+{ if(argc<3)
+  { puts("Please provide at least 2 arguements: a string pattern and a text file.\n");
+    puts("For example: #test 1.txt\n");
+    exit(EXIT_SUCCESS);
+  }
+  
+  int i = 2;
+  int pos = 0;
+  FILE * fp;
+  const char* patt = argv[1];
+
+  while(i<argc)
+  { if((fp = fopen(argv[i], "r")) == NULL) { perror("Bad input\n"); }
+    if (-1 == (pos=search(fp, patt)))
+    { printf ("pattern '%s' was not found in %s\n", patt, argv[i]);
+    } else
+    { printf ("pattern '%s' found in %s offset=%d\n", patt,argv[i],pos);
     }
+    i++;
+  }
 }
