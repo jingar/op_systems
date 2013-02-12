@@ -3,7 +3,7 @@
 #include <string.h>
 #include <pthread.h>
 
-typedef struct {char * file; char * pat;} input;
+struct input{char * file; char * pat;};
 /* A function to searcg a substing in a file.  The file F has to be
    opened and the function is going to call subsequent fgetc on F
    until it reaches EOF or finds the match.
@@ -40,20 +40,15 @@ int search (FILE *f, char *pat)
     return -1;
 }
 
-int search_wrapper(input* inst)
+void* search_wrapper(void* inst)
 { FILE * fp;
-  if((fp = fopen(inst->file, "r")) == NULL) { perror("Bad input\n"); }
-  pthread_exit(search(fp, inst->pat));
+  int * result = malloc(sizeof(int));
+  struct input* ins = (struct input*) inst;
+  if((fp = fopen(ins->file, "r")) == NULL) { perror("Bad input\n"); }
+  *result = search(fp, ins->pat);
+  pthread_exit(result);
 }
 
-/* TODO: Check if the arguments are valid
-   TODO: Todo, open the file safely
-   TODO: Execute SEARCH for every file in ARGV
-   TODO: Print the position found
-   TODO: Make sure it does not segfaults in case
-         arguments are wrong.
-
-   XXX: Use a better searching algorihm.  */
 int main (int argc, char *argv[])
 { if(argc<3)
   { puts("Please provide at least 2 arguements: a string pattern and a text file.\n");
@@ -62,8 +57,8 @@ int main (int argc, char *argv[])
   }
   
   int i = 2;
-  int pos[1] = {0};//,0,0,0,0,0,0,0,0,0};
-  input * inst = malloc(sizeof(input));
+  int pos[1] = {0};
+  struct input * inst = malloc(sizeof(struct input));
   inst-> pat = argv[1];
   pthread_t* tids = malloc ((argc-2)*sizeof(pthread_t));
 
@@ -85,4 +80,5 @@ int main (int argc, char *argv[])
     }
     i++;
   }
+  free(inst); free(tids);
 }
