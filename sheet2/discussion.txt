@@ -1,0 +1,13 @@
+The problem:
+  Parallelise searching programme developed for question 2, to isolate search in each file by using either threads or processes.
+Solution:
+  Process forks:
+    for each file to be searched, a separate process should be created, printing to stdout the value found and exiting afterwards. Halt.
+  Thread:
+    for each file to be searched, a separate pthread should be created, printing to stdout the value found and joining back to the process. Halt.
+
+  Communication in both solutions is minimal, the processes return void, as do the threads.
+  Thread solution would be slightly more efficient, especially on large scale.
+  The process solution would be easier to implement, in our opinion, due to simplicity of fork() calls. During the exploration of pthread, we have stumbled onto an interesting effect of confusing pointers and arrays, which lead the programme to overwriting memory unexpectedly.
+
+  We think that the combination of solutions would not be viable to our problem, due to simplicity of the search task. The computational complexity of creating a thread for every comparison our search function is greater than doing the process in sequence, due to the communication involved.
