@@ -14,7 +14,7 @@
 
 #define SIZE 1000
 #define N_ITERATIONS 100000
-#define N_THREADS 16
+#define N_THREADS 2
 
 struct timespec start, finish;
   
@@ -67,13 +67,15 @@ void *add_arrays(void* args)
 	  a[i] = a[i] + b[i];    
 	  //printf("a[%d] = %d \n",i,a[i]);
 	}
-      /*barrier_test = pthread_barrier_wait(&barrier);
+      printf("1 iteration \n");
+      barrier_test = pthread_barrier_wait(&barrier);
       if(barrier_test != 0 && barrier_test != PTHREAD_BARRIER_SERIAL_THREAD)
 	{ printf("thread did not wait for the barrier\n");
 	  exit(EXIT_FAILURE);
-	  }*/
+	  }
       
     }
+
 }
 
 void split_work(int number)
@@ -229,7 +231,7 @@ int main(int argc, char** argv)
       parallel_add(number_of_threads);
       
       clock_gettime(CLOCK_REALTIME, &finish);
-      fprintf (stderr, "Total time: %03li\n", xelapsed (finish, start));
+      fprintf (stderr, "Total time par: %03li\n", xelapsed (finish, start));
 
      
       
@@ -238,7 +240,7 @@ int main(int argc, char** argv)
       add_arrays_seq(number_of_threads);
       
       clock_gettime(CLOCK_REALTIME, &finish);
-      fprintf (stderr, "Total time: %03li\n", xelapsed (finish, start));
+      fprintf (stderr, "Total time seq: %03li\n", xelapsed (finish, start));
       // best_time(number_of_threads);
       //best_thread_time(number_of_threads);
     }
