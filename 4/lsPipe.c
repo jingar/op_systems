@@ -47,7 +47,7 @@ int main(int argc, char** argv)
     cursz=curpos+bufsz;
     //if not enough memory for increasing the buffer, exit
     if(NULL == (bufp = (char *) realloc (buf, cursz)))
-    { printf("error 2\n");
+    { printf("error 2\n");ae
       exit(0);
     }
     buf = bufp;

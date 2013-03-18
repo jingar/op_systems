@@ -1,0 +1,152 @@
+#include <stdio.h>
+
+#define max_size 1073741824
+typedef struct s_block *t_block;
+
+/* Define the block size since the sizeof will be wrong */
+
+#define BLOCK_SIZE 20
+
+/* block struct */
+struct s_block {
+
+  size_t size;
+
+  struct s_block *next;
+
+  struct s_block *prev;
+
+  int free;
+
+  void *ptr;
+
+  /* A pointer to the allocated block */
+
+  char data [1];
+
+};
+
+
+
+/* Split block according to size. */
+
+/* The b block must exist. */
+
+void split_block (t_block b, size_t s)
+
+{
+  t_block new;
+  new = (t_block )(b->data + s);
+
+  new ->size = b->size - s - BLOCK_SIZE ;
+
+  new ->next = b->next;
+  
+  new ->prev = b;
+  
+  new ->free = 1;
+  
+  new ->ptr = new ->data;
+  
+  b->size = s;
+  
+  b->next = new;
+  
+  if (new ->next)
+    {
+      new ->next ->prev = new;
+    }
+}
+
+/* Add a new block at the of heap */
+/* return NULL if things go wrong */
+
+t_block extend_heap (t_block last , size_t s)
+{
+
+  int sb;
+
+  t_block b;
+
+  b = sbrk(0);
+
+  b = (int)sbrk( BLOCK_SIZE + s);
+
+  if (sb < 0)
+    {
+      return (NULL );
+    }
+
+  b->size = s;
+
+  b->next = NULL;
+
+  b->prev = last;
+
+  b->ptr = b->data;
+
+  if (last)
+    {
+      last ->next = b;
+    }
+
+  b->free = 0;
+
+  return (b);
+}
+
+void *malloc(size_t size )
+{
+t_block b,last;
+
+size_t s;
+
+s = align4(size );
+
+if (base) {
+
+6 /* First find a block */
+
+7 last = base;
+
+8 b = find_block (&last ,s);
+
+9 if (b) {
+
+10 /* can we split */
+
+11 if ((b->size - s) >= ( BLOCK_SIZE + 4))
+
+  12 split_block (b,s);
+
+13 b->free =0;
+
+14 } else {
+
+15 /* No fitting block, extend the heap */
+
+16 b = extend_heap (last ,s);
+
+17 if (!b)
+
+  18 return(NULL );
+
+19 }
+
+20 } else {
+
+21 /* first time */
+
+22 b = extend_heap (NULL ,s);
+
+23 if (!b)
+
+  24 return(NULL );
+
+25 base = b;
+
+26 }
+
+27 return(b->data );
+
+28 }

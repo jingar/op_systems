@@ -1,0 +1,13 @@
+#include <stdio.h>
+typedef struct c_info
+{
+  size_t size;
+  unsigned short int free;
+  struct c_info *next;
+  struct c_info *prev;
+}chunk_info;
+
+main()
+{
+  printf("%d \n", sizeof(chunk_info));
+}
