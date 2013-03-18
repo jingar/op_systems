@@ -24,7 +24,6 @@ typedef struct t_info{
   int to;
 }thread_args;
 //typedef struct t_info thread_args;
-
 thread_args** thread_args_ptr;
 
 
@@ -62,7 +61,7 @@ void *add_arrays(void* args)
   //printf("add array arg %d \n",*i);
   //printf("add arrays_seq from %d to %d\n",from,to);
   //initialise a and by to size 1000 and make each element equal to 1
-  printf("IN ADD ARRAYS id %lu, from %d, to %d \n",((thread_args*)args)->id,((thread_args*)args)->from,((thread_args*)args)->to);
+  //  printf("IN ADD ARRAYS id %lu, from %d, to %d \n",((thread_args*)args)->id,((thread_args*)args)->from,((thread_args*)args)->to);
   int from = ((thread_args*)args)->from;
   int to = ((thread_args*)args)->to;
   int i,j;
@@ -94,7 +93,7 @@ void split_work(int number)
       //printf("counter else %d \n",counter);
     }
   printf("first from %d to %d \n", thread_args_ptr[0]->from,thread_args_ptr[0]->to);
-  /*for(i = 1; i < number; i++)
+  for(i = 1; i < number; i++)
     {
       thread_args_ptr[i]->from = counter+1;
       thread_args_ptr[i]->to = counter + n.quot;
@@ -102,12 +101,12 @@ void split_work(int number)
       //thread_args_ptr[i]->to = thread_args_ptr[i]->from + n.quot;
       printf(" from %d to %d \n", thread_args_ptr[i]->from,thread_args_ptr[i]->to);
       counter+=n.quot;
-    n  }*/
+    }
 }
 
 void parallel_add(int number_of_threads)
 {
-  printf("START PARRALEL \n");
+  //  printf("START PARRALEL \n");
   int thread_check;
   int i = 0;
 
@@ -115,7 +114,7 @@ void parallel_add(int number_of_threads)
   for (i = 0 ; i<number_of_threads; i++)
     {
       thread_args_ptr[i] = malloc(sizeof(thread_args));
-      printf("START ALLOCATION MEMORY \n");
+      //  printf("START ALLOCATION MEMORY \n");
     }
   if (thread_args_ptr == NULL)
     {
@@ -124,26 +123,26 @@ void parallel_add(int number_of_threads)
     }  
   
   split_work(number_of_threads);
-  printf("AFTER SPLIT \n");
+  //printf("AFTER SPLIT \n");
   thread_check = pthread_create(&thread_args_ptr[0]->id,NULL,add_arrays,thread_args_ptr[0]);
-  printf("args id %lu first from %d to %d \n", thread_args_ptr[0]->id,thread_args_ptr[0]->from,thread_args_ptr[0]->to);
-  printf("thread_check %d \n",thread_check);
+  //printf("args id %lu first from %d to %d \n", thread_args_ptr[0]->id,thread_args_ptr[0]->from,thread_args_ptr[0]->to);
+  //printf("thread_check %d \n",thread_check);
   if(thread_check != 0)
     {
       printf("Thread could not be created");
     }
-  /*for (i = 1;i < number_of_threads; i++)
+  for (i = 1;i < number_of_threads; i++)
     {     
       thread_check = pthread_create(&thread_args_ptr[i]->id,NULL,add_arrays,thread_args_ptr[i]);
 
       if(thread_check != 0)
 	{
-	  printf("Thread could not be created");
+	  perror("Thread could not be created");
 	}
       //printf("%lu test \n",thread_args_ptr[i]->id);
       }
  
-  */
+  
   for(i=0; i<number_of_threads; i++)
     { 
       if(pthread_join(thread_args_ptr[i]->id, NULL) != 0) 
@@ -168,7 +167,45 @@ void print_array()
     }
 }
 
-
+void best_time(int number_of_threads)
+{
+  int number,current_time,best_num_threads;
+  int best_time = 1000000;
+  for(number = 1; number <number_of_threads+1; number++)
+    {
+      clock_gettime(CLOCK_REALTIME, &start);
+      parallel_add(number_of_threads);
+      clock_gettime(CLOCK_REALTIME, &finish);
+      current_time = xelapsed (finish, start);
+      //printf("blaah %d\n",current_time);
+      if(best_time > current_time)
+	{
+	  // printf("inside if c %d b %d\n",current_time,best_time);
+	  best_time = current_time;
+	  best_num_threads = number;
+	}
+    }
+  printf("Best time %d , Best number of threads %d \n",best_time,best_num_threads);
+}
+void best_thread_time(int number_of_threads)
+{
+  int number,current_time;
+  int best_time = 1000000;
+  for(number = 0; number < 20; number++)
+    {
+      clock_gettime(CLOCK_REALTIME, &start);
+      parallel_add(number_of_threads);
+      clock_gettime(CLOCK_REALTIME, &finish);
+      current_time = xelapsed (finish, start);
+      //printf("blaah %d\n",current_time);
+      if(best_time > current_time)
+	{
+	  // printf("inside if c %d b %d\n",current_time,best_time);
+	  best_time = current_time;
+	}
+    }
+  printf("Best time %d , Best number of threads %d \n",best_time,number_of_threads);
+}
 void init_data( )
 {
   int i;
@@ -185,19 +222,25 @@ int main(int argc, char** argv)
     {
       int number_of_threads = atoi(argv[1]);
       init_data();
+      /*printf("before a[0] %d b[0] %d \n",a[0],b[0]);
       printf("%d \n",number_of_threads);
+      
       clock_gettime(CLOCK_REALTIME, &start);
       parallel_add(number_of_threads);
       
       clock_gettime(CLOCK_REALTIME, &finish);
-      fprintf (stderr, "Total time: %03li\n", xelapsed (finish, start));
-      
-      clock_gettime(CLOCK_REALTIME, &start);
-      
-      add_arrays_seq(number_of_threads);
+      fprintf (stderr, "Total time: %03li\n", xelapsed (finish, start));*/
 
+      printf("after a[0] %d \n",a[0]);
+      
+      clock_gettime(CLOCK_REALTIME,p &start);
+	printf("before a[1] %d b[1] %d \n",a[1],b[1]);
+      add_arrays_seq(number_of_threads);
+      printf("after a[1] %d \n",a[1]);
       clock_gettime(CLOCK_REALTIME, &finish);
       fprintf (stderr, "Total time: %03li\n", xelapsed (finish, start));
+      // best_time(number_of_threads);
+      //best_thread_time(number_of_threads);
     }
   else{
     printf("must be at least one thread \n");
