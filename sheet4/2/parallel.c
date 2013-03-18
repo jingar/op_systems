@@ -185,7 +185,7 @@ void best_time(int number_of_threads)
 	  best_num_threads = number;
 	}
     }
-  printf("Best time %d , Best number of threads %d \n",best_time,best_num_threads);
+ p printf("Best time %d , Best number of threads %d \n",best_time,best_num_threads);
 }
 void best_thread_time(int number_of_threads)
 {
@@ -222,21 +222,20 @@ int main(int argc, char** argv)
     {
       int number_of_threads = atoi(argv[1]);
       init_data();
-      /*printf("before a[0] %d b[0] %d \n",a[0],b[0]);
-      printf("%d \n",number_of_threads);
+
       
       clock_gettime(CLOCK_REALTIME, &start);
       parallel_add(number_of_threads);
       
       clock_gettime(CLOCK_REALTIME, &finish);
-      fprintf (stderr, "Total time: %03li\n", xelapsed (finish, start));*/
+      fprintf (stderr, "Total time: %03li\n", xelapsed (finish, start));
 
-      printf("after a[0] %d \n",a[0]);
+     
       
-      clock_gettime(CLOCK_REALTIME,p &start);
-	printf("before a[1] %d b[1] %d \n",a[1],b[1]);
+      clock_gettime(CLOCK_REALTIME, &start);
+      
       add_arrays_seq(number_of_threads);
-      printf("after a[1] %d \n",a[1]);
+      
       clock_gettime(CLOCK_REALTIME, &finish);
       fprintf (stderr, "Total time: %03li\n", xelapsed (finish, start));
       // best_time(number_of_threads);
