@@ -124,15 +124,8 @@ void parallel_add(int number_of_threads)
     }
   //split the work for each thread
   split_work(number_of_threads);
-  //initialise the first thread, this is done because the first thread may differ in work from other threads
-  thread_check = pthread_create(&thread_args_ptr[0]->id,NULL,add_arrays,thread_args_ptr[0]);
-  //check if the thread creation worked
-  if(thread_check != 0)
-    {
-      printf("Thread could not be created");
-    }
-  //initialise rest of the threads, this only works if the required number of threads is larger than 1
-  for (i = 1;i < number_of_threads; i++)
+  //initialise the threads, with the each chunk they need to work with
+  for (i = 0;i < number_of_threads; i++)
     {     
       //create a thread , store the id in position i, and pass in the arguments that are postion i
       thread_check = pthread_create(&thread_args_ptr[i]->id,NULL,add_arrays,thread_args_ptr[i]);
