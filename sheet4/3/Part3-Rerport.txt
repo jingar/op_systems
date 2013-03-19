@@ -1,0 +1,10 @@
+sequential	 |410917 |411770 |410853 |411889 |423991 |415261 |414649 |415486 |411873 |415134 |418016 |
+parallel         |416662 |221169 |133174 |109787 |105423 |102418 |103484 |105763 |107808 |114069 |117238 |
+Number of threads|1	 | 2	 |5	 |10	 |15	 |20	 |25	 |30	 |40 	  |50	 |60	 |
+
+All tests have been performed on linux20 lab machine: centOS 6.4 x64, 3.7 GiB of RAM, quad-core 2.8 GHz CPU
+Observation-
+As can be seen by the data , using threads has great benifits as using only two threads decreasing computing time significantly.
+
+Also it can been seen from the table that after a certain number of threads the computing time increases will eventually out do the time gained from
+parallising the program. This is because of two reasons, as the number of threads increase the thread resource overhead increases aswell. once a thread is finished it need to wait for other threads  before it can finish this also creates workload bubbles, decreasing overall time-efficiency.

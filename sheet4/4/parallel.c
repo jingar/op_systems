@@ -12,8 +12,8 @@
 #include <limits.h>
 #include <pthread.h>
 
-#define SIZE 1000
-#define N_ITERATIONS 100000
+#define SIZE 10
+#define N_ITERATIONS 10
 #define N_THREADS 2
 
 //Most of this code is the same as for part 2 but i have added in a barrier that specified place with" ------------"
@@ -69,7 +69,8 @@ void *add_arrays(void* args)
 	{
 	  a[i] = a[i] + b[i];    
 	}
-      //-----------------------------------------------------------------
+      printf("%d \n",j);
+   //-----------------------------------------------------------------
       // create a barrier for the threads to wait
       barrier_test =  pthread_barrier_wait(&barrier);
       //check if the barrier works, if not then return an error
@@ -103,6 +104,7 @@ void split_work(int number)
       //n.quot - 1 because if the the quot is 7 we actually want to do work in terms of index from 0 to 6
       counter = thread_args_ptr[0]->to = n.quot-1;
     }
+  printf("from %d , to %d \n",thread_args_ptr[0]->from,thread_args_ptr[0]->to);
   //split for all the other threads, use counter to keep track of how much to shift by
   for(i = 1; i < number; i++)
     {
@@ -110,6 +112,7 @@ void split_work(int number)
       thread_args_ptr[i]->from = counter+1;
       thread_args_ptr[i]->to = counter + n.quot;
       counter+=n.quot;
+      printf("from %d , to %d \n",thread_args_ptr[i]->from,thread_args_ptr[i]->to);
     }
 }
 
@@ -137,8 +140,17 @@ void parallel_add(int number_of_threads)
     }
   //split the work for each thread
   split_work(number_of_threads);
+
+  thread_check = pthread_create(&thread_args_ptr[0]->id,NULL,add_arrays,thread_args_ptr[0]);
+    //printf("args id %lu first from %d to %d \n", thread_args_ptr[0]->id,thread_args_ptr[0]->from,thread_args_ptr[0]->to);
+    //printf("thread_check %d \n",thread_check);
+      //check if the thread creation worked
+    if(thread_check != 0)
+    {
+      printf("Thread could not be created");
+    }
   //initialise rest of the threads, this only works if the required number of threads is larger than 1
-  for (i = 0;i < number_of_threads; i++)
+  for (i = 1;i < number_of_threads; i++)
     {     
       //create a thread , store the id in position i, and pass in the arguments that are postion i
       thread_check = pthread_create(&thread_args_ptr[i]->id,NULL,add_arrays,thread_args_ptr[i]);

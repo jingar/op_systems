@@ -1,0 +1,7 @@
+
+
+
+
+
+
+pthread barriers add significant time to the execution of the program. They also provided data saftey as a new iteration only starts when all other threads have finished there execution meaning that all the threads can be kept in sync.
